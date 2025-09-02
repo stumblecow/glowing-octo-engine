@@ -27,7 +27,7 @@ def set_2025_delegates (chapters_df):
   if '2025 membership' not in delegate_count_2025.columns:
     st.write("Warning: '2025 membership' column not found in the DataFrame.")
     return delegate_count_2025
-  delegate_count_2025['2025 delegates'] = (delegate_count_2025['2025 membership'] * 60)
+  delegate_count_2025['2025 delegates'] = (delegate_count_2025['2025 membership']/60)
   return delegate_count_2025
 
 def prepdata(chapters_file, caucuses_file):
@@ -39,10 +39,10 @@ def prepdata(chapters_file, caucuses_file):
 # figure out 2027 convention
 def calculate_2027_membership (delegate_count_2025, organizational_growth, groundwork_growth_rate):
   membership_2027 = delegate_count_2025.copy()
-  membership_2027['2027 membership'] = membership_2027['2025 delegates'] * (1 + organizational_growth)
+  membership_2027['2027 membership'] = membership_2027['2025 membership'] * (1 + organizational_growth)
   for i in range(len(membership_2027)):
         if membership_2027.loc[i, 'Is Groundwork Chapter'] == 1:
-            membership_2027.loc[i, '2027 membership'] = membership_2027.loc[i, '2027 membership'] * (1 + groundwork_growth_rate)
+            membership_2027.loc[i, '2027 membership'] = membership_2027.loc[i, '2025 membership'] * (1 + groundwork_growth_rate)
   return membership_2027
 
 def find_total_membership (membership_2027):
@@ -54,7 +54,7 @@ def determine_delegate_apportionment (total_membership):
   return apportionment_2027 # Added return statement
 
 def set_2027_delegates (apportionment_2027, membership_2027):
-  membership_2027['2027 delegates'] = (apportionment_2027 * membership_2027['2027 membership']).astype(int)
+  membership_2027['2027 delegates'] = (membership_2027['2027 membership']/apportionment_2027).astype(int)
   return membership_2027
 
 def set_up_2027_convention (delegate_count_2025, organizational_growth, groundwork_growth_rate):
