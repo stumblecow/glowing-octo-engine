@@ -64,6 +64,12 @@ def set_up_2027_convention (delegate_count_2025, organizational_growth, groundwo
   convention_2027 = set_2027_delegates (apportionment_2027, membership_2027)
   return convention_2027, total_membership, apportionment_2027
 
+# Projecting 2027 Caucus Makeup
+def caucus_distribution_2025(melted_caucuses_data):
+    chapter_totals = melted_caucuses_data.groupby('Chapter')['2025 Voters'].transform('sum')
+    melted_caucuses_data['Caucus Share'] = melted_caucuses_data['2025 Voters'] / chapter_totals
+    return melted_caucuses_data[['Chapter', 'Caucus', 'Caucus Share', '2025 Voters']]
+
 #Main
 def main():
 #variables
