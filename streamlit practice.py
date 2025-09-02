@@ -22,10 +22,6 @@ def prepdata(chapters_file, caucuses_file):
   melted_caucuses = meltcaucuses(caucuses_df)
   return chapters_df, melted_caucuses
 
-#Set up streamlit environment
-def showchart (chapters_df, melted_caucuses):
-  st.bar_chart (chapters_df)
-  st.bar_chart (melted_caucuses)
 
 if __name__ == "__main__":
     st.title("📊 Caucus Analytics Dashboard")
@@ -38,7 +34,7 @@ if __name__ == "__main__":
     if chapters_file is not None and caucuses_file is not None:
         # Both files are ready - process them
         chapters_data, melted_caucuses_data = prepdata(chapters_file, caucuses_file)
-        showchart(chapters_data, melted_caucuses_data)
+        st.bar_chart (melted_caucuses_data, x='Caucus', y='2025 Voters')
     else:
         # Show message while waiting for uploads
         st.info("⏳ Please upload both CSV files to continue...")
