@@ -5,7 +5,11 @@ import streamlit as st
 def loaddata (chapters_file, caucuses_file):
   chapters_df = pd.read_csv (chapters_file)
   caucuses_df = pd.read_csv (caucuses_file)
+  # DEBUG: See what the column looks like before fixing
+  print("Before fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique()) 
   chapters_df['Is Groundwork Chapter'] = chapters_df['Is Groundwork Chapter'].fillna(0)
+  # DEBUG: See what the column looks like after fixing
+  print("After fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique())
   return chapters_df, caucuses_df
 
 def meltcaucuses (caucuses_df):
@@ -78,8 +82,8 @@ def main():
       st.write(f"Organizational Growth: {organizational_growth}") # Using f-strings for better formatting
       st.write(f"Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
       st.write(f"Total Membership: {total_membership}") # Using f-strings for better formatting
-      st.write(convention_2027)
-      st.write(melted_caucuses_data)  
+      st.dataframe(convention_2027)
+      st.dataframe(melted_caucuses_data)  
   else:
       # Show message while waiting for uploads
       st.info("⏳ Please upload both CSV files to continue...")
@@ -89,4 +93,3 @@ def main():
 if __name__ == "__main__":
     st.title("📊 Caucus Analytics Dashboard")
     main()
-  
