@@ -73,12 +73,13 @@ def main():
 # Check if both files are uploaded
   if chapters_file is not None and caucuses_file is not None:
       # Both files are ready - process them
-      chapters_data, melted_caucuses_data = prepdata(chapters_file, caucuses_file)
+      delegate_count_2025, melted_caucuses_data = prepdata(chapters_file, caucuses_file)
       convention_2027, total_membership, apportionment_2027 = set_up_2027_convention (delegate_count_2025, organizational_growth, groundwork_growth_rate)
       st.write(f"Organizational Growth: {organizational_growth}") # Using f-strings for better formatting
       st.write(f"Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
       st.write(f"Total Membership: {total_membership}") # Using f-strings for better formatting
-      st.write(membership_2027)
+      st.write(convention_2027)
+      st.write(melted_caucuses_data)  
   else:
       # Show message while waiting for uploads
       st.info("⏳ Please upload both CSV files to continue...")
@@ -88,3 +89,4 @@ def main():
 if __name__ == "__main__":
     st.title("📊 Caucus Analytics Dashboard")
     main()
+  
