@@ -6,10 +6,10 @@ def loaddata (chapters_file, caucuses_file):
   chapters_df = pd.read_csv (chapters_file)
   caucuses_df = pd.read_csv (caucuses_file)
   # DEBUG: See what the column looks like before fixing
-  print("Before fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique()) 
+  st.write("Before fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique()) 
   chapters_df['Is Groundwork Chapter'] = chapters_df['Is Groundwork Chapter'].fillna(0)
   # DEBUG: See what the column looks like after fixing
-  print("After fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique())
+  st.write("After fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique())
   return chapters_df, caucuses_df
 
 def meltcaucuses (caucuses_df):
@@ -24,7 +24,10 @@ def meltcaucuses (caucuses_df):
 
 def set_2025_delegates (chapters_df):
   delegate_count_2025 = chapters_df.copy()
-  delegate_count_2025['2025 delegates'] = chapters_df['2025 membership']*60
+  if '2025 membership' not in delegate_count_2025.columns:
+    st.write("Warning: '2025 membership' column not found in the DataFrame.")
+    return delegate_count_2025
+  delegate_count_2025['2025 delegates'] = (delegate_count_2025['2025 membership'] * 60)
   return delegate_count_2025
 
 def prepdata(chapters_file, caucuses_file):
@@ -67,6 +70,7 @@ def main():
   apportionment_2027 = 0
   total_membership = 0
   delegate_count_2025 = None
+  melted_caucuses_data = None
   convention_2027 = None
 # Upload files
   chapters_file = st.file_uploader('Upload Chapters CSV', type='csv')
@@ -77,7 +81,7 @@ def main():
 # Check if both files are uploaded
   if chapters_file is not None and caucuses_file is not None:
       # Both files are ready - process them
-      delegate_count_2025, melted_caucuses_data = prepdata(chapters_file, caucuses_file)
+     melted_caucuses_data, delegate_count_2025 = prepdata(chapters_file, caucuses_file)
       convention_2027, total_membership, apportionment_2027 = set_up_2027_convention (delegate_count_2025, organizational_growth, groundwork_growth_rate)
       st.write(f"Organizational Growth: {organizational_growth}") # Using f-strings for better formatting
       st.write(f"Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
