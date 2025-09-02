@@ -50,6 +50,12 @@ def set_2027_delegates (apportionment_2027, membership_2027):
   membership_2027['2027 delegates'] = (apportionment_2027 * membership_2027['2027 membership']).astype(int)
   return membership_2027
 
+def set_up_2027_convention (apportionment_2027, membership_2027, total_membership, delegate_count_2025, organizational_growth, groundwork_growth_rate):
+  calculate_2027_membership (delegate_count_2025, organizational_growth, groundwork_growth_rate)
+  find_total_membership (membership_2027)
+  determine_delegate_apportionment (total_membership)
+  set_2027_delegates (apportionment_2027, membership_2027)
+
 #Main
 def main():
 # Upload files
@@ -62,12 +68,7 @@ def main():
   if chapters_file is not None and caucuses_file is not None:
       # Both files are ready - process them
       chapters_data, melted_caucuses_data = prepdata(chapters_file, caucuses_file)
-      # The return values of the functions were not being used in the main function.
-      # Also, chapters_df was not defined in this scope, it should be chapters_data
-      delegate_count_2025 = set_2025_delegates (chapters_data)
-      membership_2027 = calculate_2027_membership (delegate_count_2025, organizational_growth, groundwork_growth_rate)
-      total_membership = find_total_membership (membership_2027)
-      apportionment_2027 = determine_delegate_apportionment (membership_2027, total_membership)
+      set_up_2027_convention(apportionment_2027, membership_2027, total_membership, delegate_count_2025, organizational_growth, groundwork_growth_rate)
 
       st.write(f"Organizational Growth: {organizational_growth}") # Using f-strings for better formatting
       st.write(f"Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
