@@ -55,7 +55,7 @@ def set_up_2027_convention (delegate_count_2025, organizational_growth, groundwo
   total_membership = find_total_membership (membership_2027)
   apportionment_2027 = determine_delegate_apportionment (total_membership)
   convention_2027 = set_2027_delegates (apportionment_2027, membership_2027)
-  return convention_2027
+  return convention_2027, total_membership, apportionment_2027
 
 #Main
 def main():
