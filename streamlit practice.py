@@ -17,7 +17,7 @@ def meltcaucuses (caucuses_df):
   melted_caucuses['2025 Voters'] = melted_caucuses['2025 Voters'].fillna(0)
   return melted_caucuses
 
-def prepdata():
+def prepdata(chapters_file, caucuses_file):
   chapters_df, caucuses_df = loaddata(chapters_file, caucuses_file)
   melted_caucuses = meltcaucuses(caucuses_df)
   return chapters_df, melted_caucuses
