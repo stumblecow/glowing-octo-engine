@@ -70,6 +70,8 @@ def caucus_distribution_2025(melted_caucuses_data):
     melted_caucuses_data['Caucus Share'] = melted_caucuses_data['2025 Voters'] / chapter_totals
     return melted_caucuses_data[['Chapter', 'Caucus', 'Caucus Share', '2025 Voters']]
 
+
+
 #Main
 def main():
 #variables
@@ -89,6 +91,8 @@ def main():
     # Both files are ready - process them
     melted_caucuses_data, delegate_count_2025 = prepdata(chapters_file, caucuses_file)
     convention_2027, total_membership, apportionment_2027 = set_up_2027_convention (delegate_count_2025, organizational_growth, groundwork_growth_rate)
+    melted_caucuses_data = caucus_distribution_2025(melted_caucuses_data)
+    # Display the results
     st.write(f"Organizational Growth: {organizational_growth}") # Using f-strings for better formatting
     st.write(f"Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Total Membership: {total_membership}") # Using f-strings for better formatting
