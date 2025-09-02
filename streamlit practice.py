@@ -1,12 +1,6 @@
 import pandas as pd
 import streamlit as st
 
-#upload data
-def uploaddata ():
-  chapters_file = st.file_uploader ('Upload Chapters CSV', type = 'csv')
-  caucuses_file = st.file_uploader ('Upload Caucuses CSV', type = 'csv')
-  return chapters_file, caucuses_file
-
 #Load and clean up Data
 def loaddata (chapters_file, caucuses_file):
   chapters_df = pd.read_csv (chapters_file)
@@ -34,7 +28,19 @@ def showchart (chapters_df, melted_caucuses):
   st.bar_chart (melted_caucuses)
 
 if __name__ == "__main__":
-    # Capture the returned data
-    chapters_data, melted_caucuses = prepdata()
-    # Pass the data to the showchart function
-    showchart(chapters_data, melted_caucuses)
+    st.title("📊 Caucus Analytics Dashboard")
+    
+    # Upload files
+    chapters_file = st.file_uploader('Upload Chapters CSV', type='csv')
+    caucuses_file = st.file_uploader('Upload Caucuses CSV', type='csv')
+    
+    # Check if both files are uploaded
+    if chapters_file is not None and caucuses_file is not None:
+        # Both files are ready - process them
+        chapters_data, melted_caucuses_data = prepdata(chapters_file, caucuses_file)
+        showchart(chapters_data, melted_caucuses_data)
+    else:
+        # Show message while waiting for uploads
+        st.info("⏳ Please upload both CSV files to continue...")
+        # Don't try to process data yet
+        st.stop()  # This prevents the rest of the code from running
