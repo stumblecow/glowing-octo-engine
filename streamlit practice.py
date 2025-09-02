@@ -1,10 +1,11 @@
 import pandas as pd
 import streamlit as st
 
-#Load and clean up Data
+#Load and clean up 2025 Data
 def loaddata (chapters_file, caucuses_file):
   chapters_df = pd.read_csv (chapters_file)
   caucuses_df = pd.read_csv (caucuses_file)
+  chapters_df = chapters_df['Is Groundwork Chapter'].fillna(0)
   return chapters_df, caucuses_df
 
 def meltcaucuses (caucuses_df):
@@ -17,22 +18,21 @@ def meltcaucuses (caucuses_df):
   melted_caucuses['2025 Voters'] = melted_caucuses['2025 Voters'].fillna(0)
   return melted_caucuses
 
-def prepdata(chapters_file, caucuses_file):
-  chapters_df, caucuses_df = loaddata(chapters_file, caucuses_file)
-  melted_caucuses = meltcaucuses(caucuses_df)
-  return chapters_df, melted_caucuses
-
 def set_2025_delegates (chapters_df):
   delegate_count_2025 = chapters_df.copy()
-  delegate_count_2025.insert(3, '2025 delegates', chapters_df['2025 membership']*60)
+  delegate_count_2025['2025 delegates'] = chapters_df['2025 membership']*60
   return delegate_count_2025
 
+def prepdata(chapters_file, caucuses_file, delegate_count_2025):
+  chapters_df, caucuses_df = loaddata(chapters_file, caucuses_file)
+  melted_caucuses = meltcaucuses(caucuses_df)
+  set_2025_delegates(chapters_df)
+  return chapters_df, melted_caucuses, delegate_count_2025
+
+# figure out 2027 convention
 def calculate_2027_membership (delegate_count_2025, organizational_growth, groundwork_growth_rate):
   membership_2027 = delegate_count_2025.copy()
-  membership_2027.insert(
-      3,
-      '2027 membership',
-      membership_2027['2025 delegates']*(1+organizational_growth))
+  membership_2027['2027 membership'] = membership_2027['2025 delegates'] * (1 + organizational_growth)
   for i in range(len(membership_2027)):
         if membership_2027.loc[i, 'Is Groundwork Chapter'] == 1:
             membership_2027.loc[i, '2027 membership'] = membership_2027.loc[i, '2027 membership'] * (1 + groundwork_growth_rate)
@@ -42,12 +42,16 @@ def find_total_membership (membership_2027):
   total_membership = membership_2027['2027 membership'].sum()
   return total_membership
 
-def determine_delegate_apportionment (membership_2027, total_membership):
+def determine_delegate_apportionment (total_membership):
   apportionment_2027 = total_membership/1300
   return apportionment_2027 # Added return statement
 
+def set_2027_delegates (apportionment_2027, membership_2027):
+  membership_2027['2027 delegates'] = (apportionment_2027 * membership_2027['2027 membership']).astype(int)
+  return membership_2027
+
 #Main
-def __main__():
+def main():
 # Upload files
   chapters_file = st.file_uploader('Upload Chapters CSV', type='csv')
   caucuses_file = st.file_uploader('Upload Caucuses CSV', type='csv')
@@ -68,6 +72,7 @@ def __main__():
       st.write(f"Organizational Growth: {organizational_growth}") # Using f-strings for better formatting
       st.write(f"Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
       st.write(f"Total Membership: {total_membership}") # Using f-strings for better formatting
+      st.write(membership_2027)
   else:
       # Show message while waiting for uploads
       st.info("⏳ Please upload both CSV files to continue...")
@@ -76,4 +81,4 @@ def __main__():
 
 if __name__ == "__main__":
     st.title("📊 Caucus Analytics Dashboard")
-    __main__()
+    main()
