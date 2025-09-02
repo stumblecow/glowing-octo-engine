@@ -65,10 +65,12 @@ def set_up_2027_convention (delegate_count_2025, organizational_growth, groundwo
   return convention_2027, total_membership, apportionment_2027
 
 # Projecting 2027 Caucus Makeup
-def caucus_distribution_2025(melted_caucuses_data):
-    chapter_totals = melted_caucuses_data.groupby('Chapter')['2025 Voters'].transform('sum')
-    melted_caucuses_data['Caucus Share'] = melted_caucuses_data['2025 Voters'] / chapter_totals
-    return melted_caucuses_data[['Chapter', 'Caucus', 'Caucus Share', '2025 Voters']]
+def caucus_share_2025 (melted_caucuses_data):
+  share_df = melted_caucuses_data.copy()
+  share_df['2025 Caucus Share'] = share_df['2025 Voters']/share_df.groupby('Chapter')['2025 Voters'].transform('sum')
+  return share_df
+
+
 
 
 
@@ -79,6 +81,7 @@ def main():
   total_membership = 0
   delegate_count_2025 = None
   melted_caucuses_data = None
+  share_df = None
   convention_2027 = None
 # Upload files
   chapters_file = st.file_uploader('Upload Chapters CSV', type='csv')
@@ -91,13 +94,14 @@ def main():
     # Both files are ready - process them
     melted_caucuses_data, delegate_count_2025 = prepdata(chapters_file, caucuses_file)
     convention_2027, total_membership, apportionment_2027 = set_up_2027_convention (delegate_count_2025, organizational_growth, groundwork_growth_rate)
-    melted_caucuses_data = caucus_distribution_2025(melted_caucuses_data)
+    share_df = caucus_share_2025(melted_caucuses_data)
     # Display the results
     st.write(f"Organizational Growth: {organizational_growth}") # Using f-strings for better formatting
     st.write(f"Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Total Membership: {total_membership}") # Using f-strings for better formatting
     st.dataframe(convention_2027)
-    st.dataframe(melted_caucuses_data)  
+    st.dataframe(melted_caucuses_data)
+    st.dataframe(share_df)  
   else:
     # Show message while waiting for uploads
     st.info("⏳ Please upload both CSV files to continue...")
