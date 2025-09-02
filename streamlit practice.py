@@ -30,8 +30,8 @@ def set_2025_delegates (chapters_df):
 def calculate_2027_membership (delegate_count_2025, organizational_growth, groundwork_growth_rate):
   membership_2027 = delegate_count_2025.copy()
   membership_2027.insert(
-      3, 
-      '2027 membership', 
+      3,
+      '2027 membership',
       membership_2027['2025 delegates']*(1+organizational_growth))
   for i in range(len(membership_2027)):
         if membership_2027.loc[i, 'Is Groundwork Chapter'] == 1:
@@ -42,9 +42,9 @@ def find_total_membership (membership_2027):
   total_membership = membership_2027['2027 membership'].sum()
   return total_membership
 
- def determine_delegate_apportionment (membership_2027, total_membership):
-  apportionment_2027 = total_membership/1300    
-
+def determine_delegate_apportionment (membership_2027, total_membership):
+  apportionment_2027 = total_membership/1300
+  return apportionment_2027 # Added return statement
 
 #Main
 def __main__():
@@ -58,14 +58,16 @@ def __main__():
   if chapters_file is not None and caucuses_file is not None:
       # Both files are ready - process them
       chapters_data, melted_caucuses_data = prepdata(chapters_file, caucuses_file)
-      set_2025_delegates (chapters_df)
-      calculate_2027_membership (delegate_count_2025, organizational_growth, groundwork_growth_rate)
-      find_total_membership (membership_2027)
-      determine_delegate_apportionment (membership_2027, total_membership)
+      # The return values of the functions were not being used in the main function.
+      # Also, chapters_df was not defined in this scope, it should be chapters_data
+      delegate_count_2025 = set_2025_delegates (chapters_data)
+      membership_2027 = calculate_2027_membership (delegate_count_2025, organizational_growth, groundwork_growth_rate)
+      total_membership = find_total_membership (membership_2027)
+      apportionment_2027 = determine_delegate_apportionment (membership_2027, total_membership)
 
-      st.write("Organizational Growth: {organizational_growth}")
-      st.write("Delegate Apportionment: {apportionment_2027}")
-      st.write("Total Membership: {total_membership}")
+      st.write(f"Organizational Growth: {organizational_growth}") # Using f-strings for better formatting
+      st.write(f"Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
+      st.write(f"Total Membership: {total_membership}") # Using f-strings for better formatting
   else:
       # Show message while waiting for uploads
       st.info("⏳ Please upload both CSV files to continue...")
@@ -75,5 +77,3 @@ def __main__():
 if __name__ == "__main__":
     st.title("📊 Caucus Analytics Dashboard")
     __main__()
-    
-    
