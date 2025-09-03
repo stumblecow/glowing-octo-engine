@@ -167,7 +167,6 @@ def main():
 #variables
   apportionment_2027 = 0
   total_membership = 0
-  convention_2025_summary_df = None
   delegate_count_2025 = None
   convention_2025_summary_df = None
   convention_2027_summary_df = None
@@ -211,6 +210,7 @@ def main():
     st.subheader("2025 Convention Overall Summary")
     convention_2025_summary_df = get_2025_convention_summary(pivot_2025)
     st.write(convention_2025_summary_df)
+  #make editable pivot
     st.subheader("2027 Caucus Makeup")
     edited_pivot = st.data_editor(pivot_2027)
     #data validation for editor
@@ -227,6 +227,7 @@ def main():
       mime='text/csv',
     )
 #create combined pivot
+    convention_2027_summary_df = get_2027_convention_summary(edited_pivot)
     combined_df = combine_convention_summaries(convention_2025_summary_df, convention_2027_summary_df)
     st.write(combined_df)
   else:
