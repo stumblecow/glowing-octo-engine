@@ -78,7 +78,6 @@ def set_2027_caucus (share_df, convention_2027):
   convention_2027['Chapter'] = convention_2027['Chapter'].str.strip()
   
   # Debug: check what we're merging
-  st.button("Debug Merge")
   if st.button("Debug Merge"):
     st.write("Sample chapters in share_df:", caucus_2027_df['Chapter'].head(10).tolist())
     st.write("Sample chapters in convention_2027:", convention_2027['Chapter'].head(10).tolist())
