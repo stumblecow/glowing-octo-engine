@@ -123,7 +123,7 @@ def create_2025_caucus_pivot(melted_caucuses_data):
 
 def get_2025_convention_summary(pivot_2025):
   #summarizes the caucus makeup of 2025 convention
-  total_2025_delegates = pivot_2025('Chapter Delegates').sum()
+  total_2025_delegates = pivot_2025['Chapter Delegates'].sum()
   sum_of_each_caucus = pivot_2025.drop(columns=['Chapter Delegates']).sum()
   #calculate percentages
   percent_of_total = (sum_of_each_caucus/total_2025_delegates*100).round(1)
