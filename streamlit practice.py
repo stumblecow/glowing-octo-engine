@@ -72,6 +72,13 @@ def caucus_share_2025 (melted_caucuses_data):
 
 def set_2027_caucus (share_df, convention_2027):
   caucus_2027_df = share_df.copy()
+  # Clean column names and values
+  share_df['Chapter'] = share_df['Chapter'].str.strip()
+  convention_2027['Chapter'] = convention_2027['Chapter'].str.strip()
+  # Convert to same case if needed
+  share_df['Chapter'] = share_df['Chapter'].str.lower()
+  convention_2027['Chapter'] = convention_2027['Chapter'].str.lower()
+  #Merge
   caucus_2027_df = caucus_2027_df.merge(convention_2027[['Chapter', '2027 delegates']], on='Chapter', how='left')
   # Just add this to see what's happening
   st.write("Chapters in caucus data:", len(share_df['Chapter'].unique()))
