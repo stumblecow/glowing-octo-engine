@@ -149,7 +149,7 @@ def main():
     #data validation for editor
     for index, row_data in edited_pivot.iterrows():
       chapter_name = index
-      row_sum = row_data.drop('Chapter Delegates').sum()
+      row_sum = row_data.sum()
       if row_sum != row_data['Chapter Delegates']:
         st.error(f"❌ Validation failed for {row_data['Chapter']}: Sum is {row_sum} but should be {row_data['Chapter Delegates']}")
 
