@@ -197,12 +197,12 @@ def main():
     # Display the results of figuring out 2027 convention makeup
     st.write(f"2027 Delegate Apportionment (total membership divided by 1300): {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Estimated 2027 Membership: {total_membership}") # Using f-strings for better formatting
-    st.write(convention_2027)
 #show and hide results of growth changes
     if st.button("Show/Hide Results of Growth Rate Changes"):
       st.session_state.show_growth_rate_changes = not st.session_state.show_growth_rate_changes
     if st.session_state.show_growth_rate_changes:
       st.write("Organizational Growth and Groundwork Growth Rate Changes")
+      st.write(convention_2027)
 #show and hide 2025 chapter data
     if st.button("Show/Hide 2025 Delegate Count and Estimated Chapter Membership"):
       st.session_state.show_delegate_count_2025 = not st.session_state.show_delegate_count_2025
