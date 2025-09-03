@@ -164,6 +164,8 @@ def main():
 #session state
   if 'show_delegate_count_2025' not in st.session_state:
     st.session_state['show_delegate_count_2025'] = False
+  if 'show_growth_rate_changes' not in st.session_state:
+    st.session_state['show_growth_rate_changes'] = False
 #variables
   apportionment_2027 = 0
   total_membership = 0
@@ -196,6 +198,11 @@ def main():
     st.write(f"2027 Delegate Apportionment (total membership divided by 1300): {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Estimated 2027 Membership: {total_membership}") # Using f-strings for better formatting
     st.write(convention_2027)
+#show and hide results of growth changes
+    if st.button("Show/Hide Results of Growth Rate Changes"):
+      st.session_state.show_growth_rate_changes = not st.session_state.show_growth_rate_changes
+    if st.session_state.show_growth_rate_changes:
+      st.write("Organizational Growth and Groundwork Growth Rate Changes")
 #show and hide 2025 chapter data
     if st.button("Show/Hide 2025 Delegate Count and Estimated Chapter Membership"):
       st.session_state.show_delegate_count_2025 = not st.session_state.show_delegate_count_2025
@@ -205,8 +212,6 @@ def main():
 #final pivot table data with editable 2027 pivot table
     pivot_2027 = create_2027_caucus_pivot(caucus_2027_df)
     pivot_2025 = create_2025_caucus_pivot(melted_caucuses_data)
-    st.subheader("2025 Caucus Makeup by chapter")
-    st.write(pivot_2025)
     convention_2025_summary_df = get_2025_convention_summary(pivot_2025)
   #make editable pivot
     st.subheader("2027 Caucus Makeup")
