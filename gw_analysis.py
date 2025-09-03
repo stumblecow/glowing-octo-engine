@@ -151,7 +151,7 @@ def main():
       chapter_name = index
       row_sum = row_data.sum()
       if row_sum != row_data['Chapter Delegates']:
-        st.error(f"❌ Validation failed for {row_data['Chapter']}: Sum is {row_sum} but should be {row_data['Chapter Delegates']}")
+        st.error(f"❌ Validation failed for {row_data['index']}: Sum is {row_sum} but should be {row_data['Chapter Delegates']}")
 
   else:
     # Show message while waiting for uploads
