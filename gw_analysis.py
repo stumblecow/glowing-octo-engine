@@ -215,6 +215,7 @@ def main():
     convention_2025_summary_df = get_2025_convention_summary(pivot_2025)
   #make editable pivot
     st.subheader("2027 Caucus Makeup")
+    st.write("This is editable! Play with the numbers")
     edited_pivot = st.data_editor(pivot_2027)
     #data validation for editor
     for index, row_data in edited_pivot.iterrows():
@@ -232,6 +233,8 @@ def main():
 #create combined pivot
     convention_2027_summary_df = get_2027_convention_summary(edited_pivot)
     combined_df = combine_convention_summaries(convention_2025_summary_df, convention_2027_summary_df)
+    st.subheader("2025 and 2027 Convention Summary")
+    st.write("Based on your tweaking")
     st.write(combined_df)
   else:
     # Show message while waiting for uploads
