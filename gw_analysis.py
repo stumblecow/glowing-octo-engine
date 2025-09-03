@@ -149,8 +149,9 @@ def main():
     #data validation for editor
     for index, row_data in pivot_2027.iterrows():
       row_sum = row_data.drop('Chapter Delegates').sum()
-      if row_sum != row['Chapter Delegates']:
+      if row_sum != pivot_2027['Chapter Delegates']:
         print(f"Validation failed for {row['Chapter Delegates']}, check your math")
+
 
   else:
     # Show message while waiting for uploads
