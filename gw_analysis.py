@@ -207,9 +207,7 @@ def main():
     pivot_2025 = create_2025_caucus_pivot(melted_caucuses_data)
     st.subheader("2025 Caucus Makeup by chapter")
     st.write(pivot_2025)
-    st.subheader("2025 Convention Overall Summary")
     convention_2025_summary_df = get_2025_convention_summary(pivot_2025)
-    st.write(convention_2025_summary_df)
   #make editable pivot
     st.subheader("2027 Caucus Makeup")
     edited_pivot = st.data_editor(pivot_2027)
