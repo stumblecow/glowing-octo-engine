@@ -97,6 +97,7 @@ def set_2027_caucus (share_df, convention_2027):
   
   # Fill missing values with 0 so the calculation doesn't break
   caucus_2027_df['2027 delegates'] = caucus_2027_df['2027 delegates'].fillna(0)
+  caucus_2027_df['2025 Caucus Share'] = caucus_2027_df['2025 Caucus Share'].fillna(0)
   
   # Now calculate the delegates (make sure to use integer math)
   caucus_2027_df['2027 Delegates for Caucus'] = (
