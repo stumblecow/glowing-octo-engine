@@ -227,7 +227,7 @@ def main():
       mime='text/csv',
     )
 #create combined pivot
-    combined_df = combine_convention_summaries(convention_summary_2025_df, convention_summary_2027_df)
+    combined_df = combine_convention_summaries(convention_2025_summary_df, convention_2027_summary_df=)
     st.write(combined_df)
   else:
     # Show message while waiting for uploads
