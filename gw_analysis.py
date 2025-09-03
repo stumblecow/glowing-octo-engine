@@ -111,8 +111,7 @@ def create_pivot(caucus_2027_df):
         aggfunc='sum',
         fill_value=0
     )
-    
-    return pivot_2027
+  return pivot_2027
 
 def create_validated_editor(caucus_2027_df, convention_2027):
   validated_edit_pivot=
