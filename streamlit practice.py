@@ -73,6 +73,13 @@ def caucus_share_2025 (melted_caucuses_data):
 def set_2027_caucus (share_df, convention_2027):
   caucus_2027_df = share_df.copy()
   caucus_2027_df = caucus_2027_df.merge(convention_2027[['Chapter', '2027 delegates']], on='Chapter', how='inner')
+  # Just add this to see what's happening
+  st.write("Chapters in caucus data:", len(share_df['Chapter'].unique()))
+  st.write("Chapters in convention data:", len(convention_2027['Chapter'].unique()))
+  
+  # See which chapters are missing
+  missing_chapters = set(share_df['Chapter']) - set(convention_2027['Chapter'])
+  st.write("Chapters missing from convention data:", missing_chapters)
   caucus_2027_df ['2027 Delegates for Caucus']= convention_2027['2027 delegates']*caucus_2027_df['2025 Caucus Share']
   return caucus_2027_df
 
