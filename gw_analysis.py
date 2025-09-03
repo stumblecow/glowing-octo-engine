@@ -5,11 +5,7 @@ import streamlit as st
 def loaddata (chapters_file, caucuses_file):
   chapters_df = pd.read_csv (chapters_file)
   caucuses_df = pd.read_csv (caucuses_file)
-  # DEBUG: See what the column looks like before fixing
-  st.write("Before fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique())
   chapters_df['Is Groundwork Chapter'] = chapters_df['Is Groundwork Chapter'].fillna(0)
-  # DEBUG: See what the column looks like after fixing
-  st.write("After fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique())
   return chapters_df, caucuses_df
 
 def meltcaucuses (caucuses_df):
@@ -77,10 +73,6 @@ def set_2027_caucus (share_df, convention_2027):
   caucus_2027_df['Chapter'] = caucus_2027_df['Chapter'].str.strip()
   convention_2027['Chapter'] = convention_2027['Chapter'].str.strip()
   
-  # Debug: check what we're merging
-  st.write("Sample chapters in share_df:", caucus_2027_df['Chapter'].head(10).tolist())
-  st.write("Sample chapters in convention_2027:", convention_2027['Chapter'].head(10).tolist())
-  
   # Perform the merge
   caucus_2027_df = caucus_2027_df.merge(
       convention_2027[['Chapter', '2027 delegates']], 
@@ -91,10 +83,6 @@ def set_2027_caucus (share_df, convention_2027):
   caucus_2027_df['2027 delegates'] = caucus_2027_df['2027 delegates'].fillna(0)
   caucus_2027_df['2025 Caucus Share'] = caucus_2027_df['2025 Caucus Share'].fillna(0)
 
-  #Debug post merge
-  st.write("Number of missing 2027 delegates after merge:", caucus_2027_df['2027 delegates'].isnull().sum())
-  missing_delegates = caucus_2027_df[caucus_2027_df['2027 delegates'].isnull()]['Chapter'].unique()
-  st.write("Chapters missing 2027 delegates:", missing_delegates)
   # Now calculate the delegates (make sure to use integer math)
   caucus_2027_df['2027 Delegates for Caucus'] = (
     caucus_2027_df['2027 delegates'] * caucus_2027_df['2025 Caucus Share']
