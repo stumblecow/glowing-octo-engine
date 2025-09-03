@@ -114,6 +114,19 @@ def create_pivot(caucus_2027_df):
   pivot_2027['Chapter Delegates'] = pivot_2027.sum(axis=1)
   return pivot_2027
 
+
+def create_2025_pivot_table(melted_caucuses_data):
+    #Create a pivot table from the melted caucuses data
+    pivot_2025 = pd.pivot_table(
+        melted_caucuses_data,
+        values='2025 Voters',
+        index='Chapter',
+        columns='Caucus', 
+        aggfunc='sum',
+        fill_value=0
+    )
+    return pivot_2025
+
 #Main
 def main():
 #variables
@@ -125,6 +138,7 @@ def main():
   convention_2027 = None
   caucus_2027_df = None
   pivot_2027 = None
+  pivot_2025 = None
 # Upload files
   chapters_file = st.file_uploader('Upload Chapters CSV', type='csv')
   caucuses_file = st.file_uploader('Upload Caucuses CSV', type='csv')
@@ -139,10 +153,12 @@ def main():
     share_df = caucus_share_2025(melted_caucuses_data)
     caucus_2027_df = set_2027_caucus (share_df, convention_2027)
     pivot_2027 = create_pivot(caucus_2027_df)
+    pivot_2025 = create_2025_pivot_table(melted_caucuses_data)
     # Display the results
     st.write(f"2027 Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Total 2027 Membership: {total_membership}") # Using f-strings for better formatting
     st.write(delegate_count_2025)
+    st.write(pivot_2025)
     st.write(pivot_2027)
     st.subheader("2027 Delegate Makeup")
     edited_pivot = st.data_editor(pivot_2027)
