@@ -104,7 +104,7 @@ def set_2027_caucus (share_df, convention_2027):
 
 def create_pivot(caucus_2027_df):
   pivot_2027 = pd.pivot_table(
-        comparison_df,
+        caucus_2027_df,
         values='2027 Delegates for Caucus',
         index='Chapter', 
         columns='Caucus',
