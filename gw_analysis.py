@@ -147,8 +147,8 @@ def main():
     st.subheader("2027 Delegate Makeup")
     st.data_editor(pivot_2027)
     #data validation for editor
-    for row in pivot_2027.iterrows():
-      row_sum = row.drop('Chapter Delegates').sum()
+    for index, row_data in pivot_2027.iterrows():
+      row_sum = row_data.drop('Chapter Delegates').sum()
       if row_sum != row['Chapter Delegates']:
         print(f"Validation failed for {row['Chapter Delegates']}, check your math")
 
