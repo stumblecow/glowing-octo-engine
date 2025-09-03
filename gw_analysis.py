@@ -111,6 +111,7 @@ def create_pivot(caucus_2027_df):
         aggfunc='sum',
         fill_value=0
     )
+  pivot_2027['Chapter Delegates'] = pivot_2027.sum(axis=1)
   return pivot_2027
 
 #Main
