@@ -130,6 +130,34 @@ def get_2025_convention_summary(pivot_2025):
   convention_2025_summary_df = pd.DataFrame({'Caucus': sum_of_each_caucus.index, 'Total Delegates': sum_of_each_caucus.values, 'Percent of Total': percent_of_total.values})
   return convention_2025_summary_df
 
+def get_2027_convention_summary(pivot_2027):
+  #summarizes the caucus makeup of 2027 convention
+  total_2027_delegates = pivot_2027['Chapter Delegates'].sum()
+  sum_of_each_caucus = pivot_2027.drop(columns=['Chapter Delegates']).sum()
+  #calculate percentages
+  percent_of_total = (sum_of_each_caucus/total_2027_delegates*100).round(1)
+  convention_2027_summary_df = pd.DataFrame({'Caucus': sum_of_each_caucus.index, 'Total Delegates': sum_of_each_caucus.values, 'Percent of Total': percent_of_total.values})
+  return convention_2027_summary_df
+
+def combine_convention_summaries(convention_2025_summary_df, convention_2027_summary_df):
+  #combines 2025 and 2027 summaries side by side
+  
+  # Merge them together on Caucus
+  combined_df = convention_2025_summary_df.merge(
+      convention_2027_summary_df, 
+      on='Caucus', 
+      how='outer',  # Include all caucuses from both years
+      suffixes=('_2025', '_2027')
+  ).fillna(0)  # Fill missing values with 0
+  
+  # Calculate change
+  combined_df['Change in %'] = combined_df['Percent of Total_2027'] - combined_df['Percent of Total_2025']
+  combined_df['Change in Delegates'] = combined_df['Total Delegates_2027'] - combined_df['Total Delegates_2025']
+  
+  # Sort by 2027 percentage (largest first)
+  combined_df = combined_df.sort_values('Percent of Total_2027', ascending=False)
+  
+  return combined_df
 
 #Main
 def main():
@@ -149,6 +177,7 @@ def main():
   caucus_2027_df = None
   pivot_2027 = None
   pivot_2025 = None
+  combined_df = None
 # Upload files
   chapters_file = st.file_uploader('Upload Chapters CSV', type='csv')
   caucuses_file = st.file_uploader('Upload Caucuses CSV', type='csv')
@@ -177,10 +206,11 @@ def main():
 #final pivot table data with editable 2027 pivot table
     pivot_2027 = create_2027_caucus_pivot(caucus_2027_df)
     pivot_2025 = create_2025_caucus_pivot(melted_caucuses_data)
+    st.subheader("2025 Caucus Makeup by chapter")
+    st.write(pivot_2025)
+    st.subheader("2025 Convention Overall Summary")
     convention_2025_summary_df = get_2025_convention_summary(pivot_2025)
     st.write(convention_2025_summary_df)
-    st.subheader("2025 Caucus Makeup")
-    st.write(pivot_2025)
     st.subheader("2027 Caucus Makeup")
     edited_pivot = st.data_editor(pivot_2027)
     #data validation for editor
@@ -196,7 +226,7 @@ def main():
       file_name='edited_pivot.csv',
       mime='text/csv',
     )
-#create bar chart of 
+#create combined 
   else:
     # Show message while waiting for uploads
     st.info("⏳ Please upload both CSV files to continue...")
