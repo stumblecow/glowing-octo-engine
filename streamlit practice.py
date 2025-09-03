@@ -76,8 +76,8 @@ def set_2027_caucus (share_df, convention_2027):
   # Just add this to see what's happening
   st.write("Chapters in caucus data:", len(share_df['Chapter'].unique()))
   st.write("Chapters in convention data:", len(convention_2027['Chapter'].unique()))
-  st.write("convention_2027 delegates dtype:", convention_2027['2027 delegates'].dtype)
-  st.write("share_df Caucus Share dtype:", share_df['2025 Caucus Share'].dtype)
+  st.write("convention_2027 chapters dtype:", convention_2027['Chapter'].dtype)
+  st.write("share_df chapters dtype:", share_df['Chapter'].dtype)
   
   # See which chapters are missing
   missing_chapters = set(share_df['Chapter']) - set(convention_2027['Chapter'])
