@@ -72,24 +72,36 @@ def caucus_share_2025 (melted_caucuses_data):
 
 def set_2027_caucus (share_df, convention_2027):
   caucus_2027_df = share_df.copy()
-  # Clean column names and values
-  share_df['Chapter'] = share_df['Chapter'].str.strip()
-  convention_2027['Chapter'] = convention_2027['Chapter'].str.strip()
-  # Convert to same case if needed
-  share_df['Chapter'] = share_df['Chapter'].str.lower()
-  convention_2027['Chapter'] = convention_2027['Chapter'].str.lower()
-  #Merge
-  caucus_2027_df = caucus_2027_df.merge(convention_2027[['Chapter', '2027 delegates']], on='Chapter', how='left')
-  # Just add this to see what's happening
-  st.write("Chapters in caucus data:", len(share_df['Chapter'].unique()))
-  st.write("Chapters in convention data:", len(convention_2027['Chapter'].unique()))
-  st.write("convention_2027 chapters dtype:", convention_2027['Chapter'].dtype)
-  st.write("share_df chapters dtype:", share_df['Chapter'].dtype)
   
-  # See which chapters are missing
-  missing_chapters = set(share_df['Chapter']) - set(convention_2027['Chapter'])
-  st.write("Chapters missing from convention data:", missing_chapters)
-  caucus_2027_df ['2027 Delegates for Caucus']= convention_2027['2027 delegates']*caucus_2027_df['2025 Caucus Share']
+  # Clean the Chapter columns first
+  caucus_2027_df['Chapter'] = caucus_2027_df['Chapter'].str.strip()
+  convention_2027['Chapter'] = convention_2027['Chapter'].str.strip()
+  
+  # Debug: check what we're merging
+  st.write("Sample chapters in share_df:", caucus_2027_df['Chapter'].head(10).tolist())
+  st.write("Sample chapters in convention_2027:", convention_2027['Chapter'].head(10).tolist())
+  
+  # Perform the merge
+  caucus_2027_df = caucus_2027_df.merge(
+      convention_2027[['Chapter', '2027 delegates']], 
+      on='Chapter', 
+      how='left'
+  )
+  
+  # Debug: check for missing values after merge
+  st.write("Number of missing 2027 delegates after merge:", caucus_2027_df['2027 delegates'].isnull().sum())
+  
+  # Show which chapters are missing delegates
+  missing_delegates = caucus_2027_df[caucus_2027_df['2027 delegates'].isnull()]['Chapter'].unique()
+  st.write("Chapters missing 2027 delegates:", missing_delegates)
+  
+  # Fill missing values with 0 so the calculation doesn't break
+  caucus_2027_df['2027 delegates'] = caucus_2027_df['2027 delegates'].fillna(0)
+  
+  # Now calculate the delegates (make sure to use integer math)
+  caucus_2027_df['2027 Delegates for Caucus'] = (
+      caucus_2027_df['2027 delegates'] * caucus_2027_df['2025 Caucus Share']
+  ).round().astype(int)  # Round and convert to integer
   return caucus_2027_df
 
 
