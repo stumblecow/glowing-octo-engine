@@ -126,7 +126,7 @@ def get_2025_convention_summary(pivot_2025)
   total_2025_delegates = pivot_2025('Chapter Delegates').sum()
   sum_of_each_caucus = pivot_2025.drop(columns=['Chapter Delegates']).sum()
   #calculate percentages
-  percent_of_total = (sum_of_each_caucus/total_2025_delegates)*100.round(1)
+  percent_of_total = (sum_of_each_caucus/total_2025_delegates*100).round(1)
   convention_2025_summary_df = pd.DataFrame({'Caucus': sum_of_each_caucus.index, 'Total Delegates': sum_of_each_caucus.values, 'Percent of Total': percent_of_total.values})
   return convention_2025_summary_df
 
