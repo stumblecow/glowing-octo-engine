@@ -137,7 +137,7 @@ def main():
     convention_2027, total_membership, apportionment_2027 = set_up_2027_convention (delegate_count_2025, organizational_growth, groundwork_growth_rate)
     share_df = caucus_share_2025(melted_caucuses_data)
     caucus_2027_df = set_2027_caucus (share_df, convention_2027)
-    combined_pivot = create_comparison_pivot(caucus_2027_df)
+    pivot_2027 = create_pivot(caucus_2027_df)
     # Display the results
     st.write(f"2027 Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Total 2027 Membership: {total_membership}") # Using f-strings for better formatting
