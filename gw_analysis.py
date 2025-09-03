@@ -150,8 +150,7 @@ def main():
     for index, row_data in pivot_2027.iterrows():
       row_sum = row_data.drop('Chapter Delegates').sum()
       if row_sum != row_data['Chapter Delegates']:
-        st.write(f"Validation failed for {row['Chapter Delegates']}, check your math")
-
+        st.error(f"❌ Validation failed for {row_data['Chapter']}: Sum is {row_sum} but should be {row_data['Chapter Delegates']}")
 
   else:
     # Show message while waiting for uploads
