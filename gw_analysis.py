@@ -129,6 +129,9 @@ def create_2025_pivot_table(melted_caucuses_data):
 
 #Main
 def main():
+#session state
+  if 'show_delegate_count_2025' not in st.session_state:
+    st.session_state['show_delegate_count_2025'] = False
 #variables
   apportionment_2027 = 0
   total_membership = 0
@@ -155,9 +158,15 @@ def main():
     pivot_2027 = create_pivot(caucus_2027_df)
     pivot_2025 = create_2025_pivot_table(melted_caucuses_data)
     # Display the results
-    st.write(f"2027 Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
-    st.write(f"Total 2027 Membership: {total_membership}") # Using f-strings for better formatting
-    st.write(delegate_count_2025)
+    st.write(f"2027 Delegate Apportionment (total membership divided by 1300): {apportionment_2027}") # Using f-strings for better formatting
+    st.write(f"Estimated 2027 Membership: {total_membership}") # Using f-strings for better formatting
+#show and hide 2025 chapter data
+    if st.button("Show 2025 Delegate Count and Estimated Chapter Membership"):
+      st.session_state.show_delegate_count = not st.session_state.show_delegate_count
+    if st.session_state.show_delegate_count:
+      st.write("2025 Delegate Count and Estimated Chapter Membership")
+      st.write(delegate_count_2025)
+#final pivot table data with editable 2027 pivot table
     st.subheader("2025 Caucus Makeup")
     st.write(pivot_2025)
     st.subheader("2027 Caucus Makeup")
