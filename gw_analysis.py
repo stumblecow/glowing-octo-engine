@@ -102,50 +102,20 @@ def set_2027_caucus (share_df, convention_2027):
   return caucus_2027_df
 
 
-def create_comparison_pivot(caucus_2027_df):
-    # First, make sure we have both 2025 and 2027 data in the same format
-    comparison_df = caucus_2027_df.copy()
-    
-    # Create a combined column for year + caucus
-    comparison_df['Caucus_2025'] = comparison_df['Caucus'] + ' 2025'
-    comparison_df['Caucus_2027'] = comparison_df['Caucus'] + ' 2027'
-    
-    # Create pivot tables for each year
-    pivot_2025 = pd.pivot_table(
-        comparison_df,
-        values='2025 Voters',
-        index='Chapter',
-        columns='Caucus_2025',
-        aggfunc='sum',
-        fill_value=0
-    )
-    
-    pivot_2027 = pd.pivot_table(
+def create_pivot(caucus_2027_df):
+  pivot_2027 = pd.pivot_table(
         comparison_df,
         values='2027 Delegates for Caucus',
         index='Chapter', 
-        columns='Caucus_2027',
+        columns='Caucus',
         aggfunc='sum',
         fill_value=0
     )
     
-    # Combine both pivot tables side by side
-    combined_pivot = pd.concat([pivot_2025, pivot_2027], axis=1)
-    
-    # Reorder columns to group by caucus (2025 then 2027 for each caucus)
-    # Get unique caucus names (without year)
-    caucuses = comparison_df['Caucus'].unique()
-    
-    # Create ordered column list: for each caucus, add 2025 then 2027
-    ordered_columns = []
-    for caucus in sorted(caucuses):
-        ordered_columns.extend([f"{caucus} 2025", f"{caucus} 2027"])
-    
-    # Only keep columns that actually exist (in case some caucuses are missing years)
-    existing_columns = [col for col in ordered_columns if col in combined_pivot.columns]
-    combined_pivot = combined_pivot[existing_columns]
-    
-    return combined_pivot
+    return pivot_2027
+
+def create_validated_editor(caucus_2027_df, convention_2027):
+  validated_edit_pivot=
 
 #Main
 def main():
@@ -157,7 +127,7 @@ def main():
   share_df = None
   convention_2027 = None
   caucus_2027_df = None
-  combined_pivot = None
+  pivot_2027 = None
 # Upload files
   chapters_file = st.file_uploader('Upload Chapters CSV', type='csv')
   caucuses_file = st.file_uploader('Upload Caucuses CSV', type='csv')
@@ -176,8 +146,9 @@ def main():
     st.write(f"2027 Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Total 2027 Membership: {total_membership}") # Using f-strings for better formatting
     st.write(delegate_count_2025)
-    st.write(combined_pivot)
-    st.data_editor(combined_pivot)
+    st.write(pivot_2027)
+    st.subheader("2027 Delegate Makeup")
+    st.data_editor(pivot_2027)
   else:
     # Show message while waiting for uploads
     st.info("⏳ Please upload both CSV files to continue...")
