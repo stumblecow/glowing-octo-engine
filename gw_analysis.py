@@ -76,6 +76,9 @@ def set_2027_caucus (share_df, convention_2027):
   # Clean the Chapter columns first
   caucus_2027_df['Chapter'] = caucus_2027_df['Chapter'].str.strip()
   convention_2027['Chapter'] = convention_2027['Chapter'].str.strip()
+  # Fill missing values with 0 so the calculation doesn't break
+  caucus_2027_df['2027 delegates'] = caucus_2027_df['2027 delegates'].fillna(0)
+  caucus_2027_df['2025 Caucus Share'] = caucus_2027_df['2025 Caucus Share'].fillna(0)
   
   # Debug: check what we're merging
   if st.button("Debug Merge"):
@@ -90,10 +93,7 @@ def set_2027_caucus (share_df, convention_2027):
       on='Chapter', 
       how='left'
   )
-  # Fill missing values with 0 so the calculation doesn't break
-  caucus_2027_df['2027 delegates'] = caucus_2027_df['2027 delegates'].fillna(0)
-  caucus_2027_df['2025 Caucus Share'] = caucus_2027_df['2025 Caucus Share'].fillna(0)
-  
+
   # Now calculate the delegates (make sure to use integer math)
   caucus_2027_df['2027 Delegates for Caucus'] = (
     caucus_2027_df['2027 delegates'] * caucus_2027_df['2025 Caucus Share']
@@ -104,7 +104,7 @@ def set_2027_caucus (share_df, convention_2027):
 def make_pivot_table_of_caucuses (caucus_2027_df):
   pivot_table_2027 = caucus_2027_df.copy()
   pivot_table_2027 = pd.pivot_table (pivot_table_2027, 
-    values = ['2027 Delegates for Caucus'], 
+    values = ['2025 Voters','2027 Delegates for Caucus'], 
     index = ['Chapter'], 
     columns = ['Caucus'],
     aggfunc = 'sum',
@@ -141,7 +141,6 @@ def main():
     st.write(f"2027 Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Total 2027 Membership: {total_membership}") # Using f-strings for better formatting
     st.write(delegate_count_2025)
-    st.write(caucus_2027_df)
     st.write(pivot_table_2027)
     st.data_editor(pivot_table_2027)
   else:
