@@ -158,9 +158,10 @@ def main():
     st.write(f"2027 Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Total 2027 Membership: {total_membership}") # Using f-strings for better formatting
     st.write(delegate_count_2025)
+    st.subheader("2025 Caucus Makeup")
     st.write(pivot_2025)
+    st.subheader("2027 Caucus Makeup")
     st.write(pivot_2027)
-    st.subheader("2027 Delegate Makeup")
     edited_pivot = st.data_editor(pivot_2027)
     #data validation for editor
     for index, row_data in edited_pivot.iterrows():
