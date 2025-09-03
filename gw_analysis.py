@@ -203,12 +203,6 @@ def main():
     if st.session_state.show_growth_rate_changes:
       st.write("Organizational Growth and Groundwork Growth Rate Changes")
       st.write(convention_2027)
-#show and hide 2025 chapter data
-    if st.button("Show/Hide 2025 Delegate Count and Estimated Chapter Membership"):
-      st.session_state.show_delegate_count_2025 = not st.session_state.show_delegate_count_2025
-    if st.session_state.show_delegate_count_2025:
-      st.write("2025 Delegate Count and Estimated Chapter Membership")
-      st.write(delegate_count_2025)
 #final pivot table data with editable 2027 pivot table
     pivot_2027 = create_2027_caucus_pivot(caucus_2027_df)
     pivot_2025 = create_2025_caucus_pivot(melted_caucuses_data)
