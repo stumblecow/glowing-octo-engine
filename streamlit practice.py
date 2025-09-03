@@ -72,7 +72,7 @@ def caucus_share_2025 (melted_caucuses_data):
 
 def set_2027_caucus (share_df, convention_2027):
   caucus_2027_df = share_df.copy()
-  caucus_2027_df = caucus_2027_df.merge(convention_2027[['Chapter', '2027 delegates']], on='Chapter', how='left')
+  caucus_2027_df = caucus_2027_df.merge(convention_2027[['Chapter', '2027 delegates']], on='Chapter', how='inner')
   caucus_2027_df ['2027 Delegates for Caucus']= convention_2027['2027 delegates']*caucus_2027_df['2025 Caucus Share']
   return caucus_2027_df
 
