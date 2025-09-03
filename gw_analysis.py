@@ -118,7 +118,18 @@ def create_2025_caucus_pivot(melted_caucuses_data):
         aggfunc='sum',
         fill_value=0
     )
+    pivot_2025['Chapter Delegates'] = pivot_2025.sum(axis=1)
     return pivot_2025
+
+def get_2025_convention_summary(pivot_2025)
+  #summarizes the caucus makeup of 2025 convention
+  total_2025_delegates = pivot_2025('Chapter Delegates').sum()
+  sum_of_each_caucus = pivot_2025.drop(columns=['Chapter Delegates']).sum()
+  #calculate percentages
+  percent_of_total = (sum_of_each_caucus/total_2025_delegates)*100.round(1)
+  convention_2025_summary_df = pd.DataFrame({'Caucus': sum_of_each_caucus.index, 'Total Delegates': sum_of_each_caucus.values, 'Percent of Total': percent_of_total.values})
+  return convention_2025_summary_df
+
 
 #Main
 def main():
@@ -128,7 +139,10 @@ def main():
 #variables
   apportionment_2027 = 0
   total_membership = 0
+  convention_2025_summary_df = None
   delegate_count_2025 = None
+  convention_summary_2025 = None
+  convention_summary_2027 = None
   melted_caucuses_data = None
   share_df = None
   convention_2027 = None
@@ -163,6 +177,8 @@ def main():
 #final pivot table data with editable 2027 pivot table
     pivot_2027 = create_2027_caucus_pivot(caucus_2027_df)
     pivot_2025 = create_2025_caucus_pivot(melted_caucuses_data)
+    convention_2025_summary_df = get_2025_convention_summary(pivot_2025)
+    st.write(convention_2025_summary_df)
     st.subheader("2025 Caucus Makeup")
     st.write(pivot_2025)
     st.subheader("2027 Caucus Makeup")
@@ -180,6 +196,7 @@ def main():
       file_name='edited_pivot.csv',
       mime='text/csv',
     )
+#create bar chart of 
   else:
     # Show message while waiting for uploads
     st.info("⏳ Please upload both CSV files to continue...")
