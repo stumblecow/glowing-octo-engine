@@ -2,13 +2,14 @@ import pandas as pd
 import streamlit as st
 
 #Load and clean up 2025 Data
-def loaddata (chapters_file, caucuses_file):
+def load_and_clean_data (chapters_file, caucuses_file):
   chapters_df = pd.read_csv (chapters_file)
   caucuses_df = pd.read_csv (caucuses_file)
+  # Fill missing Groundwork flags with 0 (assume not Groundwork)
   chapters_df['Is Groundwork Chapter'] = chapters_df['Is Groundwork Chapter'].fillna(0)
   return chapters_df, caucuses_df
 
-def meltcaucuses (caucuses_df):
+def melt_caucuses_data (caucuses_df):
   #Melts the caucus CSV
   melted_caucuses = caucuses_df.melt (
     id_vars=['Chapter'],
@@ -23,12 +24,13 @@ def set_2025_delegates (chapters_df):
   if '2025 membership' not in delegate_count_2025.columns:
     st.write("Warning: '2025 membership' column not found in the DataFrame.")
     return delegate_count_2025
+  #Magic number is 60 because that is how the 2025 NPC apportioned delegates
   delegate_count_2025['2025 delegates'] = (delegate_count_2025['2025 membership']/60)
   return delegate_count_2025
 
-def prepdata(chapters_file, caucuses_file):
-  chapters_df, caucuses_df = loaddata(chapters_file, caucuses_file)
-  melted_caucuses = meltcaucuses(caucuses_df)
+def prep_2025_data(chapters_file, caucuses_file):
+  chapters_df, caucuses_df = load_and_clean_data(chapters_file, caucuses_file)
+  melted_caucuses = melt_caucuses_data(caucuses_df)
   delegate_count_2025 = set_2025_delegates(chapters_df)
   return melted_caucuses, delegate_count_2025
 
@@ -36,6 +38,7 @@ def prepdata(chapters_file, caucuses_file):
 def calculate_2027_membership (delegate_count_2025, organizational_growth, groundwork_growth_rate):
   membership_2027 = delegate_count_2025.copy()
   membership_2027['2027 membership'] = membership_2027['2025 membership'] * (1 + organizational_growth)
+  #applies higher Growth rate to Groundwork Chapters
   for i in range(len(membership_2027)):
         if membership_2027.loc[i, 'Is Groundwork Chapter'] == 1:
             membership_2027.loc[i, '2027 membership'] = membership_2027.loc[i, '2025 membership'] * (1 + groundwork_growth_rate)
@@ -46,6 +49,7 @@ def find_total_membership (membership_2027):
   return total_membership
 
 def determine_delegate_apportionment (total_membership):
+  #assumes we don't want more than 1300 delegates in 2027 convention
   apportionment_2027 = total_membership/1300
   return apportionment_2027 # Added return statement
 
@@ -61,15 +65,15 @@ def set_up_2027_convention (delegate_count_2025, organizational_growth, groundwo
   return convention_2027, total_membership, apportionment_2027
 
 # Projecting 2027 Caucus Makeup
-def caucus_share_2025 (melted_caucuses_data):
+def calculate_caucus_share_2025 (melted_caucuses_data):
   share_df = melted_caucuses_data.copy()
   share_df['2025 Caucus Share'] = share_df['2025 Voters']/share_df.groupby('Chapter')['2025 Voters'].transform('sum')
   return share_df
 
-def set_2027_caucus (share_df, convention_2027):
+def calculate_2027_caucus_delegates (share_df, convention_2027):
   caucus_2027_df = share_df.copy()
   
-  # Clean the Chapter columns first
+  # Clean whitespace to ensure successful merge
   caucus_2027_df['Chapter'] = caucus_2027_df['Chapter'].str.strip()
   convention_2027['Chapter'] = convention_2027['Chapter'].str.strip()
   
@@ -90,7 +94,8 @@ def set_2027_caucus (share_df, convention_2027):
   return caucus_2027_df
 
 
-def create_pivot(caucus_2027_df):
+def create_2027_caucus_pivot(caucus_2027_df):
+  #Creates a pivot table of caucus representation by chapter
   pivot_2027 = pd.pivot_table(
         caucus_2027_df,
         values='2027 Delegates for Caucus',
@@ -103,8 +108,8 @@ def create_pivot(caucus_2027_df):
   return pivot_2027
 
 
-def create_2025_pivot_table(melted_caucuses_data):
-    #Create a pivot table from the melted caucuses data
+def create_2025_caucus_pivot(melted_caucuses_data):
+    #Create a pivot table of 2025 caucus makeup from the melted caucuses data
     pivot_2025 = pd.pivot_table(
         melted_caucuses_data,
         values='2025 Voters',
@@ -139,23 +144,25 @@ def main():
 # Check if both files are uploaded
   if chapters_file is not None and caucuses_file is not None:
     # Both files are ready - process them
-    melted_caucuses_data, delegate_count_2025 = prepdata(chapters_file, caucuses_file)
+    #figure out 2025 data
+    melted_caucuses_data, delegate_count_2025 = prep_2025_data(chapters_file, caucuses_file)
+    share_df = calculate_caucus_share_2025(melted_caucuses_data)
+    #figure out 2027 data
     convention_2027, total_membership, apportionment_2027 = set_up_2027_convention (delegate_count_2025, organizational_growth, groundwork_growth_rate)
-    share_df = caucus_share_2025(melted_caucuses_data)
-    caucus_2027_df = set_2027_caucus (share_df, convention_2027)
-    pivot_2027 = create_pivot(caucus_2027_df)
-    pivot_2025 = create_2025_pivot_table(melted_caucuses_data)
-    # Display the results
+    caucus_2027_df = calculate_2027_caucus_delegates (share_df, convention_2027)
+    # Display the results of figuring out 2027 convention makeup
     st.write(f"2027 Delegate Apportionment (total membership divided by 1300): {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Estimated 2027 Membership: {total_membership}") # Using f-strings for better formatting
     st.write(convention_2027)
 #show and hide 2025 chapter data
-    if st.button("Show 2025 Delegate Count and Estimated Chapter Membership"):
+    if st.button("Show/Hide 2025 Delegate Count and Estimated Chapter Membership"):
       st.session_state.show_delegate_count_2025 = not st.session_state.show_delegate_count_2025
     if st.session_state.show_delegate_count_2025:
       st.write("2025 Delegate Count and Estimated Chapter Membership")
       st.write(delegate_count_2025)
 #final pivot table data with editable 2027 pivot table
+    pivot_2027 = create_pivot(caucus_2027_df)
+    pivot_2025 = create_2025_pivot_table(melted_caucuses_data)
     st.subheader("2025 Caucus Makeup")
     st.write(pivot_2025)
     st.subheader("2027 Caucus Makeup")
