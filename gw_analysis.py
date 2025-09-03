@@ -76,9 +76,6 @@ def set_2027_caucus (share_df, convention_2027):
   # Clean the Chapter columns first
   caucus_2027_df['Chapter'] = caucus_2027_df['Chapter'].str.strip()
   convention_2027['Chapter'] = convention_2027['Chapter'].str.strip()
-  # Fill missing values with 0 so the calculation doesn't break
-  caucus_2027_df['2027 delegates'] = caucus_2027_df['2027 delegates'].fillna(0)
-  caucus_2027_df['2025 Caucus Share'] = caucus_2027_df['2025 Caucus Share'].fillna(0)
   
   # Debug: check what we're merging
   st.write("Sample chapters in share_df:", caucus_2027_df['Chapter'].head(10).tolist())
@@ -92,7 +89,9 @@ def set_2027_caucus (share_df, convention_2027):
       on='Chapter', 
       how='left'
   )
-
+  # Fill missing values with 0 so the calculation doesn't break
+  caucus_2027_df['2027 delegates'] = caucus_2027_df['2027 delegates'].fillna(0)
+  caucus_2027_df['2025 Caucus Share'] = caucus_2027_df['2025 Caucus Share'].fillna(0)
   # Now calculate the delegates (make sure to use integer math)
   caucus_2027_df['2027 Delegates for Caucus'] = (
     caucus_2027_df['2027 delegates'] * caucus_2027_df['2025 Caucus Share']
