@@ -121,7 +121,7 @@ def create_2025_caucus_pivot(melted_caucuses_data):
     pivot_2025['Chapter Delegates'] = pivot_2025.sum(axis=1)
     return pivot_2025
 
-def get_2025_convention_summary(pivot_2025)
+def get_2025_convention_summary(pivot_2025):
   #summarizes the caucus makeup of 2025 convention
   total_2025_delegates = pivot_2025('Chapter Delegates').sum()
   sum_of_each_caucus = pivot_2025.drop(columns=['Chapter Delegates']).sum()
