@@ -170,7 +170,6 @@ def main():
     st.subheader("2025 Caucus Makeup")
     st.write(pivot_2025)
     st.subheader("2027 Caucus Makeup")
-    st.write(pivot_2027)
     edited_pivot = st.data_editor(pivot_2027)
     #data validation for editor
     for index, row_data in edited_pivot.iterrows():
