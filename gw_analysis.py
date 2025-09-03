@@ -113,9 +113,6 @@ def create_pivot(caucus_2027_df):
     )
   return pivot_2027
 
-def create_validated_editor(caucus_2027_df, convention_2027):
-  validated_edit_pivot=
-
 #Main
 def main():
 #variables
