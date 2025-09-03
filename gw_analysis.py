@@ -141,6 +141,7 @@ def main():
     st.write(f"2027 Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
     st.write(f"Total 2027 Membership: {total_membership}") # Using f-strings for better formatting
     st.write(delegate_count_2025)
+    st.write(share_df)
     st.write(pivot_table_2027)
     st.data_editor(pivot_table_2027)
   else:
