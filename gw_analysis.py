@@ -161,7 +161,7 @@ def main():
       st.write("2025 Delegate Count and Estimated Chapter Membership")
       st.write(delegate_count_2025)
 #final pivot table data with editable 2027 pivot table
-    pivot_2027 = create_pivot(caucus_2027_df)
+    pivot_2027 = create_2027_caucus_pivot(caucus_2027_df)
     pivot_2025 = create_2025_pivot_table(melted_caucuses_data)
     st.subheader("2025 Caucus Makeup")
     st.write(pivot_2025)
