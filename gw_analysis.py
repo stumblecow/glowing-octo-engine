@@ -143,14 +143,10 @@ def main():
     caucus_2027_df = set_2027_caucus (share_df, convention_2027)
     pivot_table_2027 = make_pivot_table_of_caucuses(caucus_2027_df)
     # Display the results
-    st.write(f"Organizational Growth: {organizational_growth}") # Using f-strings for better formatting
-    st.write(f"Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
-    st.write(f"Total Membership: {total_membership}") # Using f-strings for better formatting
-    st.dataframe(convention_2027)
-    st.dataframe(melted_caucuses_data)
-    st.dataframe(share_df)
-    st.dataframe(caucus_2027_df)
+    st.write(f"2027 Delegate Apportionment: {apportionment_2027}") # Using f-strings for better formatting
+    st.write(f"Total 2027 Membership: {total_membership}") # Using f-strings for better formatting
     st.write(pivot_table_2027)
+    st.data_editor(pivot_table_2027)
   else:
     # Show message while waiting for uploads
     st.info("⏳ Please upload both CSV files to continue...")
