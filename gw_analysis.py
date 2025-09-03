@@ -162,8 +162,8 @@ def main():
     st.write(f"Estimated 2027 Membership: {total_membership}") # Using f-strings for better formatting
 #show and hide 2025 chapter data
     if st.button("Show 2025 Delegate Count and Estimated Chapter Membership"):
-      st.session_state.show_delegate_count = not st.session_state.show_delegate_count
-    if st.session_state.show_delegate_count = True:
+      st.session_state.show_delegate_count_2025 = not st.session_state.show_delegate_count
+    if st.session_state.show_delegate_count_2025 = True:
       st.write("2025 Delegate Count and Estimated Chapter Membership")
       st.write(delegate_count_2025)
 #final pivot table data with editable 2027 pivot table
