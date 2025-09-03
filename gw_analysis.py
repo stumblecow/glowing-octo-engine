@@ -150,7 +150,7 @@ def main():
     st.dataframe(melted_caucuses_data)
     st.dataframe(share_df)
     st.dataframe(caucus_2027_df)
-    st.write(pivot_table_2027(caucus_2027_df))
+    st.write(pivot_table_2027)
   else:
     # Show message while waiting for uploads
     st.info("⏳ Please upload both CSV files to continue...")
