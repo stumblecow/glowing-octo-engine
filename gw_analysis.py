@@ -173,7 +173,13 @@ def main():
       row_sum = row_data.drop('Chapter Delegates').sum()
       if row_sum != row_data['Chapter Delegates']:
         st.error(f"❌ Validation failed for {chapter_name}: Sum is {row_sum} but should be {row_data['Chapter Delegates']}")
-
+#download CSV of edited 2027 pivot table
+    st.download_button(
+      label="Download Edited 2027 Pivot Table",
+      data=edited_pivot.to_csv().encode('utf-8'),
+      file_name='edited_pivot.csv',
+      mime='text/csv',
+    )
   else:
     # Show message while waiting for uploads
     st.info("⏳ Please upload both CSV files to continue...")
