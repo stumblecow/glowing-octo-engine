@@ -154,9 +154,6 @@ def combine_convention_summaries(convention_2025_summary_df, convention_2027_sum
   combined_df['Change in %'] = combined_df['Percent of Total_2027'] - combined_df['Percent of Total_2025']
   combined_df['Change in Delegates'] = combined_df['Total Delegates_2027'] - combined_df['Total Delegates_2025']
   
-  # Sort by 2027 percentage (largest first)
-  combined_df = combined_df.sort_values('Percent of Total_2027', ascending=False)
-  
   return combined_df
 
 #Main
