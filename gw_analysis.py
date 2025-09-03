@@ -169,8 +169,8 @@ def main():
   total_membership = 0
   convention_2025_summary_df = None
   delegate_count_2025 = None
-  convention_summary_2025 = None
-  convention_summary_2027 = None
+  convention_summary_2025_df = None
+  convention_summary_2027_df = None
   melted_caucuses_data = None
   share_df = None
   convention_2027 = None
