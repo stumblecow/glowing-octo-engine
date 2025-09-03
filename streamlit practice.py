@@ -6,7 +6,7 @@ def loaddata (chapters_file, caucuses_file):
   chapters_df = pd.read_csv (chapters_file)
   caucuses_df = pd.read_csv (caucuses_file)
   # DEBUG: See what the column looks like before fixing
-  st.write("Before fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique()) 
+  st.write("Before fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique())
   chapters_df['Is Groundwork Chapter'] = chapters_df['Is Groundwork Chapter'].fillna(0)
   # DEBUG: See what the column looks like after fixing
   st.write("After fillna - unique values:", chapters_df['Is Groundwork Chapter'].unique())
@@ -72,7 +72,7 @@ def caucus_share_2025 (melted_caucuses_data):
 
 def set_2027_caucus (share_df, convention_2027):
   caucus_2027_df = share_df.copy()
-  caucus_2027_df = caucus_2027_df.merge(convention_2027[['Chapter', '2027 delegates']], on='Chapter', how='inner')
+  caucus_2027_df = caucus_2027_df.merge(convention_2027[['Chapter', '2027 delegates']], on='Chapter', how='left')
   # Just add this to see what's happening
   st.write("Chapters in caucus data:", len(share_df['Chapter'].unique()))
   st.write("Chapters in convention data:", len(convention_2027['Chapter'].unique()))
@@ -118,7 +118,7 @@ def main():
     st.write(f"Total Membership: {total_membership}") # Using f-strings for better formatting
     st.dataframe(convention_2027)
     st.dataframe(melted_caucuses_data)
-    st.dataframe(share_df)  
+    st.dataframe(share_df)
     st.dataframe(caucus_2027_df)
   else:
     # Show message while waiting for uploads
