@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import altair as alt
 
 #Load and clean up 2025 Data
 def load_and_clean_data (chapters_file, caucuses_file):
@@ -72,15 +73,15 @@ def calculate_caucus_share_2025 (melted_caucuses_data):
 
 def calculate_2027_caucus_delegates (share_df, convention_2027):
   caucus_2027_df = share_df.copy()
-  
+
   # Clean whitespace to ensure successful merge
   caucus_2027_df['Chapter'] = caucus_2027_df['Chapter'].str.strip()
   convention_2027['Chapter'] = convention_2027['Chapter'].str.strip()
-  
+
   # Perform the merge
   caucus_2027_df = caucus_2027_df.merge(
-      convention_2027[['Chapter', '2027 delegates']], 
-      on='Chapter', 
+      convention_2027[['Chapter', '2027 delegates']],
+      on='Chapter',
       how='left'
   )
   # Fill missing values with 0 so the calculation doesn't break
@@ -99,7 +100,7 @@ def create_2027_caucus_pivot(caucus_2027_df):
   pivot_2027 = pd.pivot_table(
         caucus_2027_df,
         values='2027 Delegates for Caucus',
-        index='Chapter', 
+        index='Chapter',
         columns='Caucus',
         aggfunc='sum',
         fill_value=0
@@ -114,7 +115,7 @@ def create_2025_caucus_pivot(melted_caucuses_data):
         melted_caucuses_data,
         values='2025 Voters',
         index='Chapter',
-        columns='Caucus', 
+        columns='Caucus',
         aggfunc='sum',
         fill_value=0
     )
@@ -141,19 +142,19 @@ def get_2027_convention_summary(pivot_2027):
 
 def combine_convention_summaries(convention_2025_summary_df, convention_2027_summary_df):
   #combines 2025 and 2027 summaries side by side
-  
+
   # Merge them together on Caucus
   combined_df = convention_2025_summary_df.merge(
-      convention_2027_summary_df, 
-      on='Caucus', 
+      convention_2027_summary_df,
+      on='Caucus',
       how='outer',  # Include all caucuses from both years
       suffixes=('_2025', '_2027')
   ).fillna(0)  # Fill missing values with 0
-  
+
   # Calculate change
   combined_df['Change in %'] = combined_df['Percent of Total_2027'] - combined_df['Percent of Total_2025']
   combined_df['Change in Delegates'] = combined_df['Total Delegates_2027'] - combined_df['Total Delegates_2025']
-  
+
   return combined_df
 
 #Main
@@ -163,6 +164,8 @@ def main():
     st.session_state['show_delegate_count_2025'] = False
   if 'show_growth_rate_changes' not in st.session_state:
     st.session_state['show_growth_rate_changes'] = False
+  if 'show_bar_charts' not in st.session_state:
+    st.session_state['show_bar_charts'] = False
 #variables
   apportionment_2027 = 0
   total_membership = 0
@@ -227,6 +230,17 @@ def main():
     st.subheader("2025 and 2027 Convention Summary")
     st.write("Based on your tweaking")
     st.write(combined_df)
+#click button to show bar charts based on editing
+    if st.button("Show/Hide bar Charts"):
+      st.session_state.show_bar_charts = not st.session_state.show_bar_charts
+    if st.session_state.show_bar_charts:
+      st.subheader("2025 and 2027 bar Charts")
+      bar_chart = alt.Chart(combined_df).mark_bar().encode(
+        x='Caucus',
+        y='Percent of Total',
+        color='N'
+      )
+      st.altair_chart(bar_chart, use_container_width=True)
   else:
     # Show message while waiting for uploads
     st.info("⏳ Please upload both CSV files to continue...")
