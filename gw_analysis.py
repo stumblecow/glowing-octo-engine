@@ -182,8 +182,8 @@ def main():
 # Upload files
   chapters_file = st.file_uploader('Upload Chapters CSV', type='csv')
   caucuses_file = st.file_uploader('Upload Caucuses CSV', type='csv')
-  organizational_growth = st.number_input('Organizational Growth', min_value=0.0, max_value=1.0, step=0.01)
-  groundwork_growth_rate = st.number_input('Groundwork Growth Rate', min_value=0.0, max_value=1.0, step=0.01)
+  organizational_growth = st.number_input('Organizational Growth', min_value=0.0, step=0.01)
+  groundwork_growth_rate = st.number_input('Groundwork Growth Rate', min_value=0.0, step=0.01)
 
 # Check if both files are uploaded
   if chapters_file is not None and caucuses_file is not None:
