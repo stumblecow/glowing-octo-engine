@@ -164,8 +164,6 @@ def main():
     st.session_state['show_delegate_count_2025'] = False
   if 'show_growth_rate_changes' not in st.session_state:
     st.session_state['show_growth_rate_changes'] = False
-  if 'show_bar_charts' not in st.session_state:
-    st.session_state['show_bar_charts'] = False
 #variables
   apportionment_2027 = 0
   total_membership = 0
