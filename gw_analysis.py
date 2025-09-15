@@ -228,17 +228,6 @@ def main():
     st.subheader("2025 and 2027 Convention Summary")
     st.write("Based on your tweaking")
     st.write(combined_df)
-#click button to show bar charts based on editing
-    if st.button("Show/Hide bar Charts"):
-      st.session_state.show_bar_charts = not st.session_state.show_bar_charts
-    if st.session_state.show_bar_charts:
-      st.subheader("2025 and 2027 bar Charts")
-      bar_chart = alt.Chart(combined_df).mark_bar().encode(
-        x='Caucus',
-        y='Percent of Total',
-        color='N'
-      )
-      st.altair_chart(bar_chart, use_container_width=True)
   else:
     # Show message while waiting for uploads
     st.info("⏳ Please upload both CSV files to continue...")
